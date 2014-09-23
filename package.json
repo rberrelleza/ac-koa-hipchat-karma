@@ -1,0 +1,32 @@
+{
+  "name": "ac-koa-hipchat-karma",
+  "displayName": "Karma",
+  "description": "Add or remove karma for people or things",
+  "version": "0.1.0",
+  "author": {
+    "name": "Atlassian Labs",
+    "url": "http://atlassian.com"
+  },
+  "license": "Apache 2.0",
+  "engines": {
+    "node": "~0.11.13"
+  },
+  "scripts": {
+    "web": "node --harmony web.js",
+    "web-dev": "nodemon --harmony -e js,css,hbs,html web.js",
+    "tunnel": "ngrok 3060"
+  },
+  "development": {
+    "port": 3060
+  },
+  "production": {
+    "localBaseUrl": "https://ac-koa-hipchat-karma.herokuapp.com",
+    "mongoEnv": "MONGOHQ_URL",
+    "port": "$PORT"
+  },
+  "dependencies": {
+    "ac-koa": "^0.2.5",
+    "ac-koa-hipchat": "^0.2.10",
+    "ac-koa-hipchat-keenio": "^0.1.4"
+  }
+}
