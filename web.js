@@ -11,7 +11,7 @@ var addon = app.addon()
   .hipchat()
   .allowGlobal(true)
   .allowRoom(true)
-  .scopes('send_notification', 'view_group');
+  .scopes('send_notification');
 
 track(addon);
 
@@ -19,6 +19,7 @@ var addonStore = MongoStore(process.env[app.config.MONGO_ENV], 'karma');
 var notifier = Notifier({format: 'html', dir: __dirname + '/messages'});
 
 addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
+  var global = !this.tenant.room;
   var match = this.match;
   var room = this.room;
   var karma = Karma(addonStore, this.tenant.group);
@@ -26,11 +27,11 @@ addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
   var command = match && match[1] === ':' && match[2];
   var subject = match && !match[1] && match[2];
   if (command) {
-    if (command === 'enable') {
+    if (global && command === 'enable') {
       enabled = true;
       yield karma.setEnabled(room.id, enabled);
       return yield notifier.send('Karma matching has been enabled in this room.');
-    } else if (command === 'disable') {
+    } else if (global && command === 'disable') {
       enabled = false;
       yield karma.setEnabled(room.id, enabled);
       return yield notifier.send('Karma matching has been disabled in this room.');
@@ -39,7 +40,7 @@ addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
     }
   } else if (subject) {
     if (subject.charAt(0) === '@') {
-      var user = yield this.tenantClient.getUser(subject);
+      var user = findUser(this.message.mentions, subject.slice(1))
       var value;
       if (user) {
         subject = user.name;
@@ -53,7 +54,8 @@ addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
     return yield notifier.send(subject + ' has ' + value + ' karma.');
   } else {
     return yield notifier.sendTemplate('help', {
-      enabled: enabled ? 'enabled' : 'disabled'
+      enabled: enabled ? 'enabled' : 'disabled',
+      global: global
     });
   }
 });
@@ -86,10 +88,7 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
     }
     var changed = (change > 0 ? 'increased' : 'decreased');
     if (isMention) {
-      var mentionName = match[1].toLowerCase().slice(1);
-      var user = this.message.mentions.find(function (user) {
-        return user.mention_name.toLowerCase() === mentionName;
-      });
+      var user = findUser(this.message.mentions, match[1].slice(1));
       if (user) {
         if (user.id === sender.id) {
           return yield notifier.send(change > 0 ? 'Don\'t be a weasel.' : 'Aw, don\'t be so hard on yourself.');
@@ -116,3 +115,10 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
 });
 
 app.listen();
+
+function findUser(mentions, mention) {
+  mention = mention.toLowerCase();
+  return mentions.find(function (user) {
+    return user.mention_name.toLowerCase() === mention;
+  });
+}
