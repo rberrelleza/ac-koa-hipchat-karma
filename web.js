@@ -15,7 +15,7 @@ var addon = app.addon()
 
 track(addon);
 
-var addonStore = MongoStore(app.config.mongoEnv, 'karma');
+var addonStore = MongoStore(app.config.MONGO_ENV, 'karma');
 var notifier = Notifier({format: 'html', dir: __dirname + '/messages'});
 
 addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
