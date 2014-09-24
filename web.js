@@ -33,7 +33,6 @@ addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
   } else if (subject) {
     if (subject.charAt(0) === '@') {
       var user = yield this.tenantClient.getUser(subject);
-      console.log(user);
       var karma;
       if (user) {
         subject = user.name;
@@ -46,7 +45,7 @@ addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
     }
     message = subject + ' has ' + karma + ' karma.';
   } else {
-    message = '' +
+    message =
       '<pre>' +
       'Karma matching is currently ' + (enabled ? 'enabled' : 'disabled') + ' in this room.\n\n' +
       'Usage:\n' +
@@ -106,7 +105,7 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
       subject = match[2] || match[3] || match[5];
       karma = yield updateSubject('thing', subject, change);
     }
-    possessive = subject + '\'' + (subject.charAt(subject.length - 1) === 's' ? '' : 's');
+    var possessive = subject + '\'' + (subject.charAt(subject.length - 1) === 's' ? '' : 's');
     message = possessive + ' karma has ' + changed + ' to ' + karma + '.';
     notify.call(this, message);
   }
