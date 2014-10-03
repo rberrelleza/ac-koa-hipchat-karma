@@ -22,7 +22,7 @@ addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
   var global = !this.tenant.room;
   var match = this.match;
   var room = this.room;
-  var karma = Karma(addonStore, this.tenant.group);
+  var karma = Karma(addonStore, this.tenant);
   var enabled = yield karma.isEnabled(room.id);
   var command = match && match[1] === ':' && match[2];
   var subject = match && !match[1] && match[2];
@@ -64,7 +64,7 @@ var strIncDec = '(?:(?:(?:(@\\w+))\\s?)|([\\w]+)|(\\([\\w]+\\))|(?:(["\'])([^\4]
 addon.webhook('room_message', new RegExp(strIncDec), function *() {
   var room = this.room;
   var sender = this.sender;
-  var karma = Karma(addonStore, this.tenant.group);
+  var karma = Karma(addonStore, this.tenant);
 
   // don't parse other slash commands
   if (/^\/\w+/.test(this.content)) return;
