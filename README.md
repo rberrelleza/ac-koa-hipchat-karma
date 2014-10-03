@@ -1,7 +1,7 @@
 # Karma #
 A global HipChat add-on for adding or removing karma to people and things.
 
-!https://s3.amazonaws.com/uploads.hipchat.com/10804/61195/8F3PsdZ2f3dHyqv/upload.png!
+![karma.png](https://bitbucket.org/repo/AnBKL4/images/3241948271-karma.png)
 
 ## [Install Me](https://hipchat.com/addons/install?url=https%3A%2F%2Fac-koa-hipchat-karma.herokuapp.com%2Faddon%2Fcapabilities) ##
 
