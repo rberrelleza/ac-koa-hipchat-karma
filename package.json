@@ -20,7 +20,7 @@
     "port": 3060
   },
   "production": {
-    "localBaseUrl": "https://ac-koa-hipchat-karma.herokuapp.com",
+    "localBaseUrl": "https://karma.hipch.at",
     "mongoEnv": "MONGOHQ_URL",
     "port": "$PORT"
   },
