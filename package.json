@@ -27,7 +27,7 @@
   "dependencies": {
     "ac-koa": "^0.2.5",
     "ac-koa-hipchat": "^0.2.10",
-    "ac-koa-hipchat-keenio": "^0.1.4",
+    "ac-koa-hipchat-keenio": "^0.2.0",
     "ac-koa-hipchat-notifier": "^0.1.0",
     "ac-node": "^0.2.2"
   }
