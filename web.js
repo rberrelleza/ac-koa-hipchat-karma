@@ -9,6 +9,7 @@ var app = ack(pkg, {store: 'MongoStore'});
 
 var addon = app.addon()
   .hipchat()
+  .key('karma-test')
   .allowGlobal(true)
   .allowRoom(true)
   .scopes('send_notification');
@@ -35,6 +36,30 @@ addon.webhook('room_message', /^\/karma(?:\s+(:)?(.+?)\s*$)?/i, function *() {
       enabled = false;
       yield karma.setEnabled(room.id, enabled);
       return yield notifier.send('Karma matching has been disabled in this room.');
+    } else if (/^top\s+things$/.test(command)) {
+      return yield notifier.sendTemplate('list', {
+        category: 'things',
+        type: 'most',
+        list: yield karma.list('thing', true)
+      });
+    } else if (/^bottom\s+things$/.test(command)) {
+      return yield notifier.sendTemplate('list', {
+        category: 'things',
+        type: 'least',
+        list: yield karma.list('thing', false)
+      });
+    } else if (/^top\s+users/.test(command)) {
+      return yield notifier.sendTemplate('list', {
+        category: 'users',
+        type: 'most',
+        list: yield karma.list('user', true)
+      });
+    } else if (/^bottom\s+users/.test(command)) {
+      return yield notifier.sendTemplate('list', {
+        category: 'users',
+        type: 'least',
+        list: yield karma.list('user', false)
+      });
     } else {
       return yield notifier.send('Sorry, I didn\'t understand that.');
     }
@@ -100,7 +125,7 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
           return yield notifier.send(change > 0 ? 'Don\'t be a weasel.' : 'Aw, don\'t be so hard on yourself.');
         } else {
           subject = user.name;
-          value = yield karma.updateUser(user.id, change);
+          value = yield karma.updateUser(user, change);
         }
       } else {
         subject = match[1];
