@@ -150,6 +150,6 @@ app.listen();
 function findUser(mentions, mention) {
   mention = mention.toLowerCase();
   return mentions.find(function (user) {
-    return user.mention_name.toLowerCase() === mention;
+    return user && user.mention_name && user.mention_name.toLowerCase() === mention;
   });
 }
