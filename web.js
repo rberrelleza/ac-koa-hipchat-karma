@@ -104,6 +104,7 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
 
   var reIncDec = new RegExp(strIncDec, 'g');
   var match;
+  var message = [];
   while (match = reIncDec.exec(this.content)) {
     var subject;
     var isMention = match[1] && match[1].charAt(0) === '@';
@@ -122,7 +123,7 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
       var user = findUser(this.message.mentions, match[1].slice(1));
       if (user) {
         if (user.id === sender.id) {
-          yield notifier.send(change > 0 ? 'Don\'t be a weasel.' : 'Aw, don\'t be so hard on yourself.');
+          message.push(change > 0 ? 'Don\'t be a weasel.' : 'Aw, don\'t be so hard on yourself.');
           continue;
         } else {
           subject = user.name;
@@ -137,11 +138,15 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
       value = yield karma.updateThing(subject, change);
     }
     var possessive = subject + '\'' + (subject.charAt(subject.length - 1) === 's' ? '' : 's');
-    var message = possessive + ' karma has ' + changed + ' to ' + value;
+    var line = possessive + ' karma has ' + changed + ' to ' + value;
     if (maxed) {
-      message += ' (maximum change of 5 points enforced)';
+      line += ' (maximum change of 5 points enforced)';
     }
-    message +='.';
+    line +='.';
+    message.push(line);
+  }
+  message = message.join('<br>');
+  if (message.length > 0) {
     yield notifier.send(message);
   }
 });
