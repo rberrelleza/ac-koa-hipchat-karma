@@ -9,7 +9,6 @@ var app = ack(pkg, {store: 'MongoStore'});
 
 var addon = app.addon()
   .hipchat()
-  .key('karma-test')
   .allowGlobal(true)
   .allowRoom(true)
   .scopes('send_notification');
