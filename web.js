@@ -141,7 +141,7 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
       message += ' (maximum change of 5 points enforced)';
     }
     message +='.';
-    return yield notifier.send(message);
+    yield notifier.send(message);
   }
 });
 
