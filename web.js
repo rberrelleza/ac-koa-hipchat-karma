@@ -89,7 +89,7 @@ var strIncDec =
       '(?:(?:(@[\\u00C0-\\u1FFF\\u2C00-\\uD7FF\\w]+))\\s?)|' +
       '([\\u00C0-\\u1FFF\\u2C00-\\uD7FF\\w]+)|' +
       '(\\([\\u00C0-\\u1FFF\\u2C00-\\uD7FF\\w]+\\))|' +
-      '(?:(["\'])([^\4]+)\\4)' +
+      '(?:(["\'])([^\'"]+)[\'"])' +
     ')(\\+{2,}|-{2,})';
 addon.webhook('room_message', new RegExp(strIncDec), function *() {
   var room = this.room;
