@@ -139,7 +139,7 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
     var possessive = subject + '\'' + (subject.charAt(subject.length - 1) === 's' ? '' : 's');
     var line = possessive + ' karma has ' + changed + ' to ' + value;
     if (maxed) {
-      line += ' (maximum change of 5 points enforced)';
+      line += ' (Buzzkill Mode™ has enforced a maximum change of 5 points)';
     }
     line +='.';
     message.push(line);
