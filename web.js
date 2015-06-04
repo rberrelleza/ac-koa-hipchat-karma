@@ -104,6 +104,7 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
   var reIncDec = new RegExp(strIncDec, 'g');
   var match;
   var message = [];
+  var matches = {};
   while (match = reIncDec.exec(this.content)) {
     var subject;
     var isMention = match[1] && match[1].charAt(0) === '@';
@@ -126,16 +127,20 @@ addon.webhook('room_message', new RegExp(strIncDec), function *() {
           continue;
         } else {
           subject = user.name;
+          if (matches[subject]) continue;
           value = yield karma.updateUser(user, change);
         }
       } else {
         subject = match[1];
+        if (matches[subject]) continue;
         value = yield karma.updateThing(subject, change);
       }
     } else {
       subject = match[2] || match[3] || match[5];
+      if (matches[subject]) continue;
       value = yield karma.updateThing(subject, change);
     }
+    matches[subject] = true;
     var possessive = subject + '\'' + (subject.charAt(subject.length - 1) === 's' ? '' : 's');
     var line = possessive + ' karma has ' + changed + ' to ' + value;
     if (maxed) {
