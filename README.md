@@ -25,3 +25,25 @@ Usage:
   "subject phrase"++     add 1 karma to a subject phrase
   @MentionName++         add 1 karma to a user by @MentionName
 ```
+
+
+# Run Karma yourself with Docker #
+This is an experimental way for you to run Karma yourself using Docker (i.e. "Behind the Firewall" with HipChat Server)
+
+### Prerequisites ###
+1. git clone https://bitbucket.org/atlassianlabs/ac-koa-hipchat-karma.git
+
+### Build ###
+1. cd ac-koa-hipchat-karma
+2. sudo docker build -t atlassian_labs/karma:latest .
+
+### Run ###
+1. sudo docker run --name karma-mongo --detach mongo:2.6
+2. sudo docker logs karma-mongo
+3. sudo docker run --name karma --detach --link karma-mongo:mongo --publish 3020:3020 -e NODE_ENV="production"
+   -e LOCAL_BASE_URL="http://your-docker-host-fqdn:3020" -e PORT=3020 atlassian_labs/karma:latest
+4. sudo docker logs karma
+5. Verify you see a valid capabilities.json returned from http://your-docker-host-fqdn:3020/addon/capabilities
+
+### Install ###
+1. Integrate your Docker-Karma with your HipChat account with https://hipchat.example.com/admin/addons (or www.hipchat.com) -> Manage (tab) -> Install an integration from a descriptor URL: http://your-docker-host-fqdn:3020/addon/capabilities
